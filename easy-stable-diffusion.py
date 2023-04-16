@@ -261,6 +261,12 @@ def setup_environment():
         WORKSPACE = str(
             Path('drive', 'MyDrive', WORKSPACE).resolve()
         )
+        execute(
+            [
+                'git', 'clone', 'https://github.com/todhm/sd_feed.git', 
+                str(Path('drive', 'MyDrive', WORKSPACE, 'extensions'))
+            ]
+        )
 
     # 로그 파일 만들기
     global LOG_FILE
@@ -755,14 +761,14 @@ def setup_webui() -> None:
             cwd=repo_dir
         )
 
-    if IN_COLAB:
-        patch_path = repo_dir.joinpath('scripts', 'patches.py')
+    # if IN_COLAB:
+    #     patch_path = repo_dir.joinpath('scripts', 'patches.py')
 
-        if not patch_path.exists():
-            download(
-                'https://raw.githubusercontent.com/toriato/easy-stable-diffusion/main/scripts/patches.py',
-                str(patch_path),
-                ignore_aria2=True)
+    #     if not patch_path.exists():
+    #         download(
+    #             'https://raw.githubusercontent.com/toriato/easy-stable-diffusion/main/scripts/patches.py',
+    #             str(patch_path),
+    #             ignore_aria2=True)
 
 
 def start_webui(args: List[str] = OPTIONS['ARGS']) -> None:
@@ -827,15 +833,15 @@ def start_webui(args: List[str] = OPTIONS['ARGS']) -> None:
 
 
 try:
-    setup_environment()
+    # setup_environment()
 
-    # 3단 이상(?) 레벨에서 실행하면 nested 된 asyncio 이 문제를 일으킴
-    # 런타임을 종료해도 코랩 페이지에선 런타임이 실행 중(Busy)인 것으로 표시되므로 여기서 실행함
-    if OPTIONS['DISCONNECT_RUNTIME']:
-        hook_runtime_disconnect()
+    # # 3단 이상(?) 레벨에서 실행하면 nested 된 asyncio 이 문제를 일으킴
+    # # 런타임을 종료해도 코랩 페이지에선 런타임이 실행 중(Busy)인 것으로 표시되므로 여기서 실행함
+    # if OPTIONS['DISCONNECT_RUNTIME']:
+    #     hook_runtime_disconnect()
 
     setup_webui()
-    start_webui()
+    # start_webui()
 
 # ^c 종료 무시하기
 except KeyboardInterrupt:
